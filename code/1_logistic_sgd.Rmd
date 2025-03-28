@@ -1,5 +1,5 @@
 # Constructing a logistic regression estimator
-## Dr Thomas Robinson | Day 1 -- Ox. Spring School 2025
+## Dr Thomas Robinson | Day 1 -- Oxford Spring School 2025
 
 ## Defining a data and prediction function
 
