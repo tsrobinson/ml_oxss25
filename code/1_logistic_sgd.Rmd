@@ -155,6 +155,41 @@ print(round(coef_logit,3))
 
 Not *too* bad, but not quite perfect. How might we try get closer?
 
+## An applied example
+
+For a brief example using applied data, let's use the communities and crime dataset, which combines data from the 1990 US census, law enforcement and crime datasets. More information on the data can be found here: https://archive.ics.uci.edu/dataset/183/communities+and+crime 
+
+We'll aim to predict whether the level of violent crimes is "high" (operationalised as having a violent crime rate above the median in our sample). We'll then use a subset of variables (as the data is very 'wide', i.e. it has many predictors)--`population`, `householdsize`, `medFamInc`, and `LandArea`--to predict this rate.
+
+```{r}
+crime <- read_csv("../data/crime.csv") # note: the ../ takes us up a level in the github repo
+
+# create a binary indicator of high violent crime
+crime$violent_bin <- ifelse(crime$ViolentCrimesPerPop > median(crime$ViolentCrimesPerPop),1,0)
+
+# add an intercept column!
+crime$intcpt = 1
+
+# train our model
+predictors <- c("population", "householdsize","medFamInc","LandArea")
+oxss_coefs <- train(X = crime[,c("intcpt", predictors)], 
+                    y = crime$violent_bin, 
+                    l_rate = 0.05, 
+                    reps = 150)
+
+# for comparison, let's "train" a model using the conventional glm algorithm
+glm_coefs <- coef(
+  glm(violent_bin ~ ., data = crime[,c("violent_bin", predictors)],
+      family = binomial("logit"))
+)
+
+print(oxss_coefs)
+print(glm_coefs)
+
+```
+
+Not too bad! Our MSE is about 0.18. Our coefficients aren't *exactly* the same as the `glm` implementation (because our optimiser is still fairly coarse), but we still get substantively similar results!
+
 ## Exercises
 
 1. What is the intuition behind making the coefficients all equal 0 at the start of training? What happens if we change the function so that the coefficients are randomly assigned (with a mean of 0)? Does this improve convergence? How?
