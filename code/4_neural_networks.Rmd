@@ -20,16 +20,17 @@ To help speed things along, the following setup code *should* work, but you may 
 # remotes::install_github("rstudio/tensorflow")
 # install.packages("reticulate")
 # tensorflow::install_tensorflow(envname = "r-reticulate")
-# install.packages("keras")
-# keras::install_keras()
+# install.packages("keras3")
+# keras3::install_keras("r-reticulate")
 # install.packages("recipes")
 ```
 
 ## Loading packages and data
 
 ```{r}
+
 library(tensorflow)
-library(keras)
+library(keras3)
 library(tidyverse)
 library(recipes)
 
